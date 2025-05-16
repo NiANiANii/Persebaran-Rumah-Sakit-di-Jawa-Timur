@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps/pages/maps_v1_page.dart';
 import 'package:flutter_google_maps/pages/maps_v2_page.dart';
+import 'package:flutter_google_maps/pages/hospital_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -91,6 +92,23 @@ class HomePage extends StatelessWidget {
                     ),
                     child: const Text(
                       'Google Maps v2',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HospitalMapPage(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: const Text(
+                      'Hospital Maps',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
