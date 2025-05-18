@@ -1,122 +1,202 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_google_maps/pages/maps_v1_page.dart';
-import 'package:flutter_google_maps/pages/maps_v2_page.dart';
 import 'package:flutter_google_maps/pages/hospital_page.dart';
+import 'package:flutter_google_maps/pages/hospital_dashboard_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  // Define blue color palette - use static const for class level constants
+  static const Color _lightestBlue = Color(0xFFE3F2FD);
+  static const Color _lighterBlue = Color(0xFF90CAF9);
+  static const Color _lightBlue = Color(0xFF42A5F5);
+  static const Color _mediumBlue = Color(0xFF1E88E5);
+  static const Color _darkBlue = Color(0xFF0D47A1);
+
+  // Background color
+  static const Color _backgroundColor = Color(0xFFF5F7FA);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          SafeArea(
-            child: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    "https://user-images.githubusercontent.com/75456232/212501850-7266409a-f0fd-4839-ba9a-d328a464c76c.png",
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
+      backgroundColor: _backgroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: _buildContent(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Rest of your code remains the same
+
+  Widget _buildHeader() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: _lightestBlue,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.map,
+              color: _mediumBlue,
+              size: 28,
             ),
           ),
-          SafeArea(
-            child: Container(
-              constraints: const BoxConstraints.expand(height: double.infinity),
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey),
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(50),
+          SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hospital Maps',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: _darkBlue,
                 ),
               ),
-              transform: Matrix4.rotationZ(0.2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Semantics(
-                    label: "Testing gambar",
-                    child: Container(
-                      width: 150,
-                      height: 150,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            "https://user-images.githubusercontent.com/75456232/212501842-975eb16b-6585-4990-8626-e6491aaddd78.png",
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'in Flutter',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MapsV1Page(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
-                    child: const Text(
-                      'Google Maps v1',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MapsV2Page(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: const Text(
-                      'Google Maps v2',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HospitalMapPage(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: const Text(
-                      'Hospital Maps',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
+              Text(
+                'Jawa Timur',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: _mediumBlue,
+                ),
               ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Menu Utama',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: _darkBlue,
+            ),
+          ),
+          SizedBox(height: 16),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              children: [
+                _buildMenuCard(
+                  context,
+                  'Dashboard',
+                  Icons.dashboard,
+                  _lightBlue,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HospitalDashboardPage(),
+                      ),
+                    );
+                  },
+                ),
+                _buildMenuCard(
+                  context,
+                  'Hospital Maps',
+                  Icons.local_hospital,
+                  _mediumBlue,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HospitalMapPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMenuCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 32,
+              ),
+            ),
+            SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: _darkBlue,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

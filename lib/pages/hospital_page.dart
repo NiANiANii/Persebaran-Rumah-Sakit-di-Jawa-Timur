@@ -29,6 +29,16 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
   // Currently selected hospital for detail view
   Hospital? _selectedHospital;
 
+  // Define blue color palette
+  final Color _lightestBlue = Color(0xFFE3F2FD);
+  final Color _lighterBlue = Color(0xFF90CAF9);
+  final Color _lightBlue = Color(0xFF42A5F5);
+  final Color _mediumBlue = Color(0xFF1E88E5);
+  final Color _darkBlue = Color(0xFF0D47A1);
+  
+  // Background color
+  final Color _backgroundColor = Color(0xFFF5F7FA);
+
   @override
   void initState() {
     super.initState();
@@ -105,28 +115,57 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _backgroundColor,
       appBar: AppBar(
-        title: const Text("Hospital Locations"),
+        backgroundColor: Colors.white,
+        foregroundColor: _darkBlue,
+        title: Text(
+          "Lokasi Rumah Sakit",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, size: 18),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           PopupMenuButton(
             onSelected: onSelectedMapType,
+            icon: Icon(Icons.layers, color: _mediumBlue),
             itemBuilder: (context) {
               return [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: MapType.normal,
-                  child: Text("Normal"),
+                  child: Text(
+                    "Normal",
+                    style: TextStyle(color: _darkBlue, fontSize: 14),
+                  ),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: MapType.hybrid,
-                  child: Text("Hybrid"),
+                  child: Text(
+                    "Hybrid",
+                    style: TextStyle(color: _darkBlue, fontSize: 14),
+                  ),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: MapType.terrain,
-                  child: Text("Terrain"),
+                  child: Text(
+                    "Terrain",
+                    style: TextStyle(color: _darkBlue, fontSize: 14),
+                  ),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: MapType.satellite,
-                  child: Text("Satellite"),
+                  child: Text(
+                    "Satellite",
+                    style: TextStyle(color: _darkBlue, fontSize: 14),
+                  ),
                 ),
               ];
             },
@@ -134,7 +173,7 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: _mediumBlue))
           : Stack(
               children: [
                 _buildGoogleMaps(),
@@ -153,10 +192,10 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -165,10 +204,11 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
         child: TextField(
           controller: _searchController,
           decoration: InputDecoration(
-            hintText: 'Search for hospitals...',
-            prefixIcon: const Icon(Icons.search),
+            hintText: 'Cari rumah sakit...',
+            hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+            prefixIcon: Icon(Icons.search, color: _mediumBlue, size: 20),
             suffixIcon: IconButton(
-              icon: const Icon(Icons.clear),
+              icon: Icon(Icons.clear, color: _mediumBlue, size: 20),
               onPressed: () {
                 _searchController.clear();
                 _filterHospitals('');
@@ -177,6 +217,7 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
+          style: TextStyle(fontSize: 14, color: _darkBlue),
           onChanged: _filterHospitals,
         ),
       ),
@@ -206,8 +247,9 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
   Widget _buildDetailCard() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: SizedBox(
+      child: Container(
         height: 150,
+        padding: EdgeInsets.only(bottom: 16),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: _filteredHospitals.length,
@@ -215,8 +257,8 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
             final hospital = _filteredHospitals[index];
             return Padding(
               padding: EdgeInsets.only(
-                left: index == 0 ? 10 : 0,
-                right: 10,
+                left: index == 0 ? 16 : 8,
+                right: 8,
               ),
               child: _displayHospitalCard(
                 hospital.name,
@@ -246,67 +288,86 @@ class _HospitalMapPageState extends State<HospitalMapPage> {
         _onClickPlaceCard(lat, lng);
       },
       child: Container(
-        width: MediaQuery.of(context).size.width - 30,
-        height: 90,
-        margin: const EdgeInsets.only(bottom: 30),
-        child: Material(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-          elevation: 10,
+        width: MediaQuery.of(context).size.width - 48,
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 4,
+          shadowColor: Colors.black.withOpacity(0.1),
           child: Row(
             children: [
               Container(
-                width: 90,
-                height: 90,
-                margin: const EdgeInsets.all(15),
+                width: 70,
+                height: 70,
+                margin: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.red.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                  color: _lightestBlue,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.local_hospital,
-                  color: Colors.red,
-                  size: 40,
+                  color: _mediumBlue,
+                  size: 32,
                 ),
               ),
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         name,
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: _darkBlue,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 4),
                       Text(
                         address,
-                        style: const TextStyle(color: Colors.black, fontSize: 14),
+                        style: TextStyle(color: _mediumBlue, fontSize: 12),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
+                      const SizedBox(height: 4),
                       Row(
                         children: [
-                          Text(
-                            "Type: $type",
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 14,
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: _lightestBlue,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              "Tipe: $type",
+                              style: TextStyle(
+                                color: _mediumBlue,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Text(
-                            "Class: $hospitalClass",
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 14,
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: _lightestBlue,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              "Kelas: $hospitalClass",
+                              style: TextStyle(
+                                color: _mediumBlue,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ],
